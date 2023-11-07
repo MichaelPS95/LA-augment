@@ -1,6 +1,6 @@
 import re
 
-def get_score(file_name):
+def get_score(file_name, t=2):
 
     # Define a pattern for extracting interactions and rows
     pattern = r'Interaction (\d+):\n\s+Int: { ([^}]+) }\n\s+Rows: { ([\d\s]+) }'
@@ -18,7 +18,6 @@ def get_score(file_name):
 
     # Iterate through the matches
     for match in matches:
-        t = len(match.group(1))
         count += 1
         rows = [int(row) for row in match.group(3).split()]
 
