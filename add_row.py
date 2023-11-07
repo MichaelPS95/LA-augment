@@ -1,6 +1,6 @@
 import re
 
-def add_row(file_name):
+def add_row(file_name, t=2):
 
     # Define a pattern for extracting interactions and rows
     pattern = r'Interaction (\d+):\n\s+Int: { ([^}]+) }\n\s+Rows: { ([\d\s]+) }'
@@ -12,11 +12,11 @@ def add_row(file_name):
     # Use regular expressions to find all interactions and their details
     matches = re.finditer(pattern, content)
 
+    print(type(matches))
     # Create a list to store the extracted data
     interactions = []
     # Iterate through the matches
     for match in matches:
-        t = len(match.group(1))
         interaction_number = int(match.group(1))
         int_values = match.group(2).split()
         rows = [int(row) for row in match.group(3).split()]
@@ -37,4 +37,4 @@ def add_row(file_name):
         print(f"Int: {interaction['int_values']}")
         print(f"Rows: {interaction['rows']}\n")
 
-add_row("t_way.txt")
+add_row("t_way.txt", 3)
