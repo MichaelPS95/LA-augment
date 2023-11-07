@@ -25,12 +25,4 @@ def get_score(file_name, t=2):
         if len(rows) < t:
             num += 1
 
-
-    # Print the extracted data
-    # for interaction in interactions:
-    #     print(f"Interaction {interaction['interaction_number']}:")
-    #     print(f"Int: {interaction['int_values']}")
-    #     print(f"Rows: {interaction['rows']}\n")
     return (count-num)/count
-
-print(get_score("t_way.txt"))
