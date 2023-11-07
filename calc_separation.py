@@ -13,32 +13,25 @@ def get_score(file_name):
     matches = re.finditer(pattern, content)
 
     # Create a list to store the extracted data
-    interactions = []
     count = 0
+    num = 0
 
     # Iterate through the matches
     for match in matches:
+        t = len(match.group(1))
         count += 1
-        interaction_number = int(match.group(1))
-        int_values = match.group(2).split()
         rows = [int(row) for row in match.group(3).split()]
 
         # Check if the 'rows' list contains only one element
-        if len(rows) == 1:
-            interaction_data = {
-                'interaction_number': interaction_number,
-                'int_values': int_values,
-                'rows': rows
-            }
+        if len(rows) < t:
+            num += 1
 
-            interactions.append(interaction_data)
 
-    # # Print the extracted data
+    # Print the extracted data
     # for interaction in interactions:
     #     print(f"Interaction {interaction['interaction_number']}:")
     #     print(f"Int: {interaction['int_values']}")
     #     print(f"Rows: {interaction['rows']}\n")
-
-    return (count-len(interactions))/count
+    return (count-num)/count
 
 print(get_score("t_way.txt"))
