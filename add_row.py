@@ -69,19 +69,21 @@ def add_row(LA, check, t=2):
     trials = count
     count -= 1
 
+    # Randomly select interactions to add
+    # Check that they aren't from the same row
     while trials >= 0:
         index = random.randint(0,count)
         interaction = interactions[index]
         contains = int(interaction['int_values'][0][1:]) in used_rows
-        vals = True
-        for i in range(len(param_values)):
-            if design[int(interaction['int_values'][0][1:])][i] > param_values[i] - 1:
-                vals = False
-                break
+        # vals = True
+        # for i in range(len(param_values)):
+        #     if design[int(interaction['int_values'][0][1:])][i] > param_values[i] - 1:
+        #         vals = False
+        #         break
 
         if row_to_add[int(interaction['int_values'][0][1:])][0] == False and \
                 row_to_add[int(interaction['int_values'][2][1:])][0] == False \
-                    and not contains and vals:
+                    and not contains:
             row_to_add[int(interaction['int_values'][0][1:])][0] = True
             row_to_add[int(interaction['int_values'][2][1:])][0] = True
             row_to_add[int(interaction['int_values'][0][1:])][1] = interaction['rows'][0]
