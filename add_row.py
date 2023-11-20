@@ -1,5 +1,6 @@
 import re
 import random
+import sys
 
 def add_row(LA, check, t=2):
 
@@ -40,7 +41,7 @@ def add_row(LA, check, t=2):
     for match in matches:
         interaction_number = int(match.group(1))
         int_values = match.group(2).replace('(','').replace(')', '').replace(',','').split(' ')
-        rows = [int(row) for row in match.group(3).split()]
+        rows = [int(row)-1 for row in match.group(3).split()]
         
 
         # Check if the 'rows' list contains < t elements
@@ -55,20 +56,20 @@ def add_row(LA, check, t=2):
             interactions.append(interaction_data)
 
     # Print the extracted data
-    for interaction in interactions:
-        print(f"Interaction {interaction['interaction_number']}:")
-        print(f"Int: {interaction['int_values']}")
-        print(f"Rows: {interaction['rows']}")
+    # for interaction in interactions:
+    #     print(f"Interaction {interaction['interaction_number']}:")
+    #     print(f"Int: {interaction['int_values']}")
+    #     print(f"Rows: {interaction['rows']}")
     row_to_add = [[False, -1, -1] for i in range(num_factors)]
 
-    for r in design:
-        print(r)
-    
+    # for r in design:
+    #     print(r)
     index = 0
-    used_rows = {}
+    used_rows = set({})
     trials = count
     count -= 1
-
+    first = True
+    first_row = 0
     # Randomly select interactions to add
     # Check that they aren't from the same row
     while trials >= 0:
@@ -90,23 +91,40 @@ def add_row(LA, check, t=2):
             row_to_add[int(interaction['int_values'][2][1:])][1] = interaction['rows'][0]
             row_to_add[int(interaction['int_values'][0][1:])][2] = int(interaction['int_values'][1])
             row_to_add[int(interaction['int_values'][2][1:])][2] = int(interaction['int_values'][3])
-        used_rows
+            if first:
+                first_row = interaction['rows'][0]
+                first = False
+        used_rows.add(interaction['rows'][0])
         trials -= 1
     
     print(row_to_add)
-    add = "\n"
-    for i in range(len(row_to_add)):
-        if row_to_add[i][2] == -1:
-            print("if " + str(param_values[i]-1), end = " ")
-            add += str(param_values[i]-1) + "\t"
-        else:
-            print("else " + str(row_to_add[i][2]), end = " ")
-            add += str(row_to_add[i][2]) + "\t"
-    print("\n")
-    
-    add = add[:-1]
-    print(add)
-    with open(LA, "a") as f:
-        f.write(add)
+    if not first:
+        add = "\n"
+        for i in range(len(row_to_add)):
+            if row_to_add[i][2] == -1:
+                temp = random.randint(0,param_values[i]-1)
+                while temp == design[first_row][i]:
+                    temp = random.randint(0,param_values[i]-1)
+                add += str(temp) + "\t"
+            else:
+                # print("else " + str(row_to_add[i][2]), end = " ")
+                add += str(row_to_add[i][2]) + "\t"
+        # print("\n")
+        
+        add = add[:-1]
+        # print(add)
+        with open(LA, "a") as f:
+            f.write(add)
 
-add_row("/home/michael/Desktop/Array-Checker/Sample-Input/Colbourn1.tsv", "t_way.txt")
+# add_row("/home/michael/Desktop/Array-Checker/Sample-Input/Colbourn1.tsv", "t_way.txt")
+
+num_parameters = len(sys.argv) - 1
+if num_parameters == 3:
+    locating_array = sys.argv[1]
+    output = sys.argv[2]
+    t_way = int(sys.argv[3])
+    add_row(locating_array, output, t_way)
+elif num_parameters == 2:
+    locating_array = sys.argv[1]
+    output = sys.argv[2]
+    add_row(locating_array, output)
