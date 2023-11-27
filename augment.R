@@ -189,7 +189,8 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
   }
   print(rows_to_add)
   if(flag == 0){
-
+    start_row <- nrow(design) + 1
+    print(design)
     for (i in 1:rows_to_add) {
       rand_index = sample(nrow(factorial), 1)
       while(anyDuplicated(rbind(design, factorial[rand_index, ]))){
@@ -201,13 +202,21 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
     # this just renames the rows, they assign weird numbers if they choose
     # say row 24 from factorial where row 24 (the name) already exists in design
     rownames(design) <- 1:nrow(design)
+    
+    # Map them back to LA values
+    for(i in 1:nrow(design)){
+      for(j in 1:ncol(design)){
+        design[i,j] <- design[i,j] - 1
+      }
+    }
+    write.table(design[start_row:nrow(design), ], file = design_path, append = TRUE, row.names = FALSE, col.names = FALSE, sep = "\t", eol = "\t\n")
     return(design)
     
   }
   else if(flag == 1){
     
     design_rows <- nrow(design)
-    
+    start_row <- nrow(design) + 1
     #get number of trials for optFederov function
     trials <- rows_to_add + nrow(design)
     
@@ -222,7 +231,12 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
     
     design <- opt$design
     rownames(design) <- 1:nrow(design)
-    
+    for(i in 1:nrow(design)){
+      for(j in 1:ncol(design)){
+        design[i,j] <- design[i,j] - 1
+      }
+    }
+    write.table(design[start_row:nrow(design), ], file = design_path, append = TRUE, row.names = FALSE, col.names = FALSE, sep = "\t", eol = "\t\n")
     return(design)
   }
   
@@ -233,6 +247,12 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
   
 }
 
+
+
+
+augment_design("/home/michael/Desktop/function/trivial_LA.tsv","/home/michael/Desktop/function/trivial.tsv", aug_num=2)
+
+augment_design("/home/michael/Desktop/function/trivial_LA.tsv","/home/michael/Desktop/function/trivial.tsv", flag=1, aug_num=2)
 
 augment_design("/home/michael/Desktop/function/Sample-Input/Colbourn1.tsv","/home/michael/Desktop/function/t_way.txt", aug_num=2)
 augment_design(design_params="/home/michael/Desktop/function/TWC.tsv", aug_num =  1)
