@@ -32,18 +32,39 @@ calc_balance <-function(LA=NULL, params=NULL){
   new_column_names <- paste("X", 1:ncol(design), sep="")
   colnames(design) <- new_column_names
   
+  # set up list to get counts for parameter values
   balance_count <- list()
   
   for(i in values_list){
     size <- round(as.numeric(i))
-    print(size)
-    print(typeof(size))
     row <- rep(0, size)
     balance_count <- c(balance_count, list(row))
   }
   
-  print(balance_count)
+  # get occurrence counts for parameter values
+  for(i in 1:nrow(design)){
+    for(j in 1:ncol(design)){
+      balance_count[[j]][design[i, j] + 1] <- balance_count[[j]][design[i, j] + 1] + 1
+    }
+  }
+  
+  # calculate the balance
+  total <- 0.0
+  count = 0
+  min = 2147483647
+  for(list in balance_count){
+    for(num in list){
+      total <- total + num
+      count <- count + 1
+      if(num < min){
+        min <- num
+      }
+    }
+  }
 
+  avg <- total/count
+  bal <- round(min/avg, digits=5)
+  return(bal)
 }
 
 

@@ -1,8 +1,9 @@
 import re
 import random
 import sys
+import copy
 
-def add_row(LA, check, t=2):
+def add_row(LA, check, num_of_added=1, t=2):
 
     # Define a pattern for extracting interactions and rows
     pattern = r'Interaction (\d+):\n\s+Int: { ([^}]+) }\n\s+Rows: { ([\d\s]+) }'
@@ -60,70 +61,89 @@ def add_row(LA, check, t=2):
     #     print(f"Interaction {interaction['interaction_number']}:")
     #     print(f"Int: {interaction['int_values']}")
     #     print(f"Rows: {interaction['rows']}")
-    row_to_add = [[False, -1, -1] for i in range(num_factors)]
 
-    # for r in design:
-    #     print(r)
-    index = 0
-    used_rows = set({})
-    trials = count
-    count -= 1
-    first = True
-    first_row = 0
-    # Randomly select interactions to add
-    # Check that they aren't from the same row
-    while trials >= 0:
-        index = random.randint(0,count)
-        interaction = interactions[index]
-        contains = int(interaction['int_values'][0][1:]) in used_rows
-        # vals = True
-        # for i in range(len(param_values)):
-        #     if design[int(interaction['int_values'][0][1:])][i] > param_values[i] - 1:
-        #         vals = False
-        #         break
+    for z in range(num_of_added):
+        with open(LA, 'r') as file:
+            lines = file.readlines()
+        row_to_add = [[False, -1, -1] for i in range(num_factors)]
+        interactions_to_remove = copy.deepcopy(interactions)
+        # for r in design:
+        #     print(r)
+        num_removed = 0
+        index = 0
+        used_rows = set({})
+        trials = count
+        first = True
+        first_row = 0
+        # Randomly select interactions to add
+        # Check that they aren't from the same row
+        while trials >= 0 and count > 0:
+            index = random.randint(0,count-1)
+            interaction = interactions[index]
+            contains = int(interaction['int_values'][0][1:]) in used_rows
+            # vals = True
+            # for i in range(len(param_values)):
+            #     if design[int(interaction['int_values'][0][1:])][i] > param_values[i] - 1:
+            #         vals = False
+            #         break
 
-        if row_to_add[int(interaction['int_values'][0][1:])][0] == False and \
-                row_to_add[int(interaction['int_values'][2][1:])][0] == False \
-                    and not contains:
-            row_to_add[int(interaction['int_values'][0][1:])][0] = True
-            row_to_add[int(interaction['int_values'][2][1:])][0] = True
-            row_to_add[int(interaction['int_values'][0][1:])][1] = interaction['rows'][0]
-            row_to_add[int(interaction['int_values'][2][1:])][1] = interaction['rows'][0]
-            row_to_add[int(interaction['int_values'][0][1:])][2] = int(interaction['int_values'][1])
-            row_to_add[int(interaction['int_values'][2][1:])][2] = int(interaction['int_values'][3])
-            if first:
-                first_row = interaction['rows'][0]
-                first = False
-        used_rows.add(interaction['rows'][0])
-        trials -= 1
-    
-    print(row_to_add)
-    if not first:
-        add = "\n"
-        for i in range(len(row_to_add)):
-            if row_to_add[i][2] == -1:
-                temp = random.randint(0,param_values[i]-1)
-                while temp == design[first_row][i]:
+            if row_to_add[int(interaction['int_values'][0][1:])][0] == False and \
+                    row_to_add[int(interaction['int_values'][2][1:])][0] == False \
+                        and not contains:
+                row_to_add[int(interaction['int_values'][0][1:])][0] = True
+                row_to_add[int(interaction['int_values'][2][1:])][0] = True
+                row_to_add[int(interaction['int_values'][0][1:])][1] = interaction['rows'][0]
+                row_to_add[int(interaction['int_values'][2][1:])][1] = interaction['rows'][0]
+                row_to_add[int(interaction['int_values'][0][1:])][2] = int(interaction['int_values'][1])
+                row_to_add[int(interaction['int_values'][2][1:])][2] = int(interaction['int_values'][3])
+                if first:
+                    first_row = interaction['rows'][0]
+                    first = False
+                interactions_to_remove.remove(interaction)
+                num_removed += 1
+            used_rows.add(interaction['rows'][0])
+            trials -= 1
+        count -= num_removed
+        # print(row_to_add)
+        # print(count)
+        if count <= 0:
+            break
+        interactions = copy.deepcopy(interactions_to_remove)
+        if not first:
+            add = "\n"
+            for i in range(len(row_to_add)):
+                if row_to_add[i][2] == -1:
                     temp = random.randint(0,param_values[i]-1)
-                add += str(temp) + "\t"
-            else:
-                # print("else " + str(row_to_add[i][2]), end = " ")
-                add += str(row_to_add[i][2]) + "\t"
-        # print("\n")
-        
-        add = add[:-1]
-        # print(add)
-        with open(LA, "a") as f:
-            f.write(add)
+                    while temp == design[first_row][i]:
+                        temp = random.randint(0,param_values[i]-1)
+                    add += str(temp) + "\t"
+                else:
+                    # print("else " + str(row_to_add[i][2]), end = " ")
+                    add += str(row_to_add[i][2]) + "\t"
+            # print("\n")
+            
+            add = add[:-1]
+            # print(add)
+        header_data = lines[1].split('\t')
+        lines[1] = "{}\t{}".format(int(header_data[0]) + 1, header_data[1])
+        with open(LA, 'w') as file:
+            file.writelines(lines)
+            file.write(add)
 
-# add_row("/home/michael/Desktop/Array-Checker/Sample-Input/Colbourn1.tsv", "t_way.txt")
+add_row("/home/michael/Desktop/function/Sample-Input/Colbourn1.tsv", "/home/michael/Desktop/function/t_way.txt")
 
 num_parameters = len(sys.argv) - 1
-if num_parameters == 3:
+if num_parameters == 4:
     locating_array = sys.argv[1]
     output = sys.argv[2]
-    t_way = int(sys.argv[3])
-    add_row(locating_array, output, t_way)
+    num_of_rows_to_add = int(sys.argv[3])
+    t_way = int(sys.argv[4])
+    add_row(locating_array, output, num_of_rows_to_add, t_way)
+elif num_parameters == 3:
+    locating_array = sys.argv[1]
+    output = sys.argv[2]
+    num_of_rows_to_add = int(sys.argv[3])
+    add_row(locating_array, output, num_of_rows_to_add)
 elif num_parameters == 2:
     locating_array = sys.argv[1]
     output = sys.argv[2]

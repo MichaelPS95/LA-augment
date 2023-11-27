@@ -31,10 +31,95 @@ generate_array("/home/michael/Desktop/function/generate", "/home/michael/Desktop
 current_directory <- getwd()
 current_directory
 
+add_separation_row <- function(LA=NULL, separation_data=NULL, rows_to_add=1, t=2){
+  if(is.null(separation_data) && is.null(LA)){
+    stop("There are no files provided.")
+  }
+  else if(is.null(LA)){
+    stop("No design specified.")
+  }
+  else if(is.null(separation_data)){
+    stop("No parameters specified.")
+  }
+  
+  else{
+    command <- paste("python3 add_row.py", LA, separation_data, rows_to_add, t,sep=" ")
+    print(command)
+    system(command, intern=TRUE)
+  }
+}
 
+format_file <- function(LA=NULL, params=NULL){
+  
+  # the locating array has to be provide in order to check it
+  if(is.null(LA)){
+    stop("The design file must be provided.")
+  }
+  
+  # I am assuming that if you don't pass parameters to generate a design that it's
+  # already in the proper format to be checked (since I will need these parameters
+  # to fix the format)
+  if(is.null(params)){
+    command <- paste("./check -sv <", LA, "> output.txt",sep=" ")
+    print(command)
+    system(command, intern=TRUE)
+  }
+  
+  else{
+    #suppressing warning here because the file is not "proper" table
+    suppressWarnings({params <- read.table(file=params, sep="\t",header=FALSE)})
+    # read in the factor levels and convert to a vector of numbers to generate full factorial
+    num_params <- as.numeric(params$V1[1])
+    row2_string <- as.character(params[2, 1])
+    values_list <- unlist(strsplit(row2_string, "\\s+"))
+    
+    # read in number of factors
+    numeric_values <- as.numeric(values_list)
+    
+    # read in the LA
+    design = read.table(file=LA, sep="\t",header=FALSE)
+    design <- design[, -ncol(design)]
+    
+    # change column/row names to match gen.factorial() method name scheme
+    new_column_names <- paste("X", 1:ncol(design), sep="")
+    colnames(design) <- new_column_names
+    
+    l2 <- paste(nrow(design), ncol(design), sep="\t")
+    
+    # getting array output file/ header set up
+    fname <- "formatted_LA.txt"
+    
+    write("v2.0", fname)
+    write(l2, fname, append=TRUE)
+    p= ""
+    for(x in numeric_values){
+      # print(x)
+      p <- paste(p, x, sep="\t")
+    }
+    p <- substring(p, 2)
+    write(p, fname, append=TRUE)
+    
+    for(i in 1:(ncol(design)+1)){
+      write(0, fname, append=TRUE)
+    }
+    
+    # appending the locating
+    file_conn <- file(fname, open = "a")
+    
+    # Loop through each row and write to the file
+    for (i in 1:nrow(design)) {
+      row_values <- design[i, ]
+      row_values <- paste(row_values, collapse = "\t")  # Concatenate values with tabs
+      cat(row_values, file = file_conn, "\n")
+    }
+    
+    # Close the file
+    close(file_conn)
+  }
+}
 
-augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.tsv", flag=0, aug_percent=0.25, aug_fix=0.5, d=1, t=2, delta=1){
-  # flag = 0 will augment by randomly selecting some # rows based on aug_percent
+augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.tsv", flag=0, aug_num=1, aug_fix=0.5, d=1, t=2, delta=1){
+  # flag = 0 will augment by randomly selecting some # rows based on aug_num
   # flag = 1 will augment by adding D-Optimal rows based on aug_perecent
   # TODO :: flag = 2 will add rows based on separation in LA design
   
@@ -48,22 +133,25 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
   if(is.null(design_path) && is.null(design_params)){
     stop("No design and no design parameters given.")
   }
-
+  # check design is not NULL
+  if(is.null(design_path)){
+    stop("No design given.")
+  }
   # check if parameters are missing
   if(is.null(design_params)){
     stop("No design parameters given.")
   }
   
-  if(!is.null(design_path)){
-    # read in design that's given
-    design = read.table(file=design_path, sep="\t",header=FALSE)
-    design <- design[, -ncol(design)]
-  }
-  else{
-    # generate the design
-    generate_path = paste(getwd(),"/generate", sep="")
-    design <- generate_array(generate_path, design_params, outfile, d, t, delta)
-  }
+  # read in design that's given
+  design = read.table(file=design_path, sep="\t",header=FALSE)
+  design <- design[, -ncol(design)]
+
+  # NOT SURE I WANT TO ALLOW THIS, I FEEL LIKE WHY ARE YOU GOING TO AUGMENT A DESIGN YOU JUST MADE
+  # else{
+  #   # generate the design
+  #   generate_path = paste(getwd(),"/generate", sep="")
+  #   design <- generate_array(generate_path, design_params, outfile, d, t, delta)
+  # }
   
   
   # change column/row names to match gen.factorial() method name scheme
@@ -95,11 +183,11 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
   
   # add % of base design rows randomly selected from factorial to LA
   # check for overflow error edge case and reset augment amount
-  rows_to_add <-as.integer(nrow(design) * aug_percent)
+  rows_to_add <-as.integer(aug_num)
   if((rows_to_add + nrow(design)) > nrow(factorial)){
-    rows_to_add = as.integer((nrow(factorial)-nrow(design))* aug_fix)
+    rows_to_add = as.integer((nrow(factorial)-nrow(design)) * aug_fix)
   }
-  
+  print(rows_to_add)
   if(flag == 0){
 
     for (i in 1:rows_to_add) {
@@ -116,7 +204,6 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
     return(design)
     
   }
-  
   else if(flag == 1){
     
     design_rows <- nrow(design)
@@ -137,12 +224,18 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
     rownames(design) <- 1:nrow(design)
     
     return(design)
-    
+  }
+  
+  else if(flag == 2){
+    format_file(LA, params)
+    add_row(design_path, "output.txt", rows_to_add, t)
   }
   
 }
 
-augment_design(design_params="/home/michael/Desktop/function/TWC.tsv", aug_percent =  .25)
+
+augment_design("/home/michael/Desktop/function/Sample-Input/Colbourn1.tsv","/home/michael/Desktop/function/t_way.txt", aug_num=2)
+augment_design(design_params="/home/michael/Desktop/function/TWC.tsv", aug_num =  1)
 
 augment_design(design_params="/home/michael/Desktop/function/TWC.tsv", flag=1)
 
@@ -157,3 +250,10 @@ augment_design(flag=1)
 augment_design(design_params="/home/michael/Desktop/function/TWC.tsv", flag=1, d=1, t=2, delta=2)
 
 augment_design(design_params="/home/michael/Desktop/function/trivial.tsv", flag=1, d=1, t=2, delta=2)
+
+
+
+factorial <- gen.factorial(levels=10, nVars=5, center=FALSE)
+factorial
+
+augment_design(design_path="/home/michael/Desktop/function/sample_la.tsv", design_params="/home/michael/Desktop/function/fake_LA_params.tsv", flag=1)
