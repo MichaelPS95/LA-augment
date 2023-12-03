@@ -215,10 +215,10 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   # generate factorial design
   factorial <- gen.factorial(levels=numeric_values, nVars=num_params[1], center=FALSE)
   
-  separ <- calc_separation(LA, design_params, t)
+  separ <- round(as.numeric(calc_separation(LA, design_params, t)), digits=5)
   bal <- calc_balance(LA, design_params)
-  print(bal)
-  print(separ)
+  # print(bal)
+  # print(separ)
   
   design_rows <- nrow(design)
   
@@ -227,11 +227,13 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   # print(opt)
   
   des <- round(opt$D, digits=5)
-  print(des)
+  # print(des)
   
-  stats <- paste("Balance = ", bal, ", Separation = ", separ, ", D-Optimal Criteria = ", des, sep="")
+  stats <- paste("Balance = ", bal, ", Separation of ", t, " = ", separ, ", D-Optimal Criteria = ", des, sep="")
   print(stats)
 }
 
-calc_statistics("/home/michael/Desktop/function/TWC_LA.tsv","/home/michael/Desktop/function/TWC.tsv")
+calc_statistics("/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_separation.tsv","/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_params.tsv")
+
+
 

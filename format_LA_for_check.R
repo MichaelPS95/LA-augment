@@ -68,6 +68,8 @@ format_file <- function(LA=NULL, params=NULL){
   }
 }
 
+format_file("/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_separation.tsv", "/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_params.tsv")
+
 format_file("/home/michael/Desktop/function/TWC_LA.tsv","/home/michael/Desktop/function/TWC.tsv")
 
 

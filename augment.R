@@ -31,7 +31,8 @@ generate_array("/home/michael/Desktop/function/generate", "/home/michael/Desktop
 current_directory <- getwd()
 current_directory
 
-add_separation_row <- function(LA=NULL, separation_data=NULL, rows_to_add=1, t=2){
+add_separation_row <- function(LA="formatted_LA.txt", separation_data="output.txt", rows_to_add=1, t=2, append_path=""){
+  print(append_path)
   if(is.null(separation_data) && is.null(LA)){
     stop("There are no files provided.")
   }
@@ -43,7 +44,7 @@ add_separation_row <- function(LA=NULL, separation_data=NULL, rows_to_add=1, t=2
   }
   
   else{
-    command <- paste("python3 add_row.py", LA, separation_data, rows_to_add, t,sep=" ")
+    command <- paste("python3 add_row.py", "formatted_LA.txt", separation_data, rows_to_add, t, append_path, sep=" ")
     print(command)
     system(command, intern=TRUE)
   }
@@ -59,63 +60,61 @@ format_file <- function(LA=NULL, params=NULL){
   # I am assuming that if you don't pass parameters to generate a design that it's
   # already in the proper format to be checked (since I will need these parameters
   # to fix the format)
-  if(is.null(params)){
-    command <- paste("./check -sv <", LA, "> output.txt",sep=" ")
-    print(command)
-    system(command, intern=TRUE)
+  # if(is.null(params)){
+  #   command <- paste("./check -sv <", "formatted_LA.txt", "> output.txt",sep=" ")
+  #   print(command)
+  #   system(command, intern=TRUE)
+  # }
+  
+  #suppressing warning here because the file is not "proper" table
+  suppressWarnings({params <- read.table(file=params, sep="\t",header=FALSE)})
+  # read in the factor levels and convert to a vector of numbers to generate full factorial
+  num_params <- as.numeric(params$V1[1])
+  row2_string <- as.character(params[2, 1])
+  values_list <- unlist(strsplit(row2_string, "\\s+"))
+  
+  # read in number of factors
+  numeric_values <- as.numeric(values_list)
+  
+  # read in the LA
+  design = read.table(file=LA, sep="\t",header=FALSE)
+  design <- design[, -ncol(design)]
+  
+  # change column/row names to match gen.factorial() method name scheme
+  new_column_names <- paste("X", 1:ncol(design), sep="")
+  colnames(design) <- new_column_names
+  
+  l2 <- paste(nrow(design), ncol(design), sep="\t")
+  
+  # getting array output file/ header set up
+  fname <- "formatted_LA.txt"
+  file(fname, open = "w")
+  write("v2.0", fname)
+  write(l2, fname, append=TRUE)
+  p= ""
+  for(x in numeric_values){
+    # print(x)
+    p <- paste(p, x, sep="\t")
+  }
+  p <- substring(p, 2)
+  write(p, fname, append=TRUE)
+  
+  for(i in 1:(ncol(design)+1)){
+    write(0, fname, append=TRUE)
   }
   
-  else{
-    #suppressing warning here because the file is not "proper" table
-    suppressWarnings({params <- read.table(file=params, sep="\t",header=FALSE)})
-    # read in the factor levels and convert to a vector of numbers to generate full factorial
-    num_params <- as.numeric(params$V1[1])
-    row2_string <- as.character(params[2, 1])
-    values_list <- unlist(strsplit(row2_string, "\\s+"))
-    
-    # read in number of factors
-    numeric_values <- as.numeric(values_list)
-    
-    # read in the LA
-    design = read.table(file=LA, sep="\t",header=FALSE)
-    design <- design[, -ncol(design)]
-    
-    # change column/row names to match gen.factorial() method name scheme
-    new_column_names <- paste("X", 1:ncol(design), sep="")
-    colnames(design) <- new_column_names
-    
-    l2 <- paste(nrow(design), ncol(design), sep="\t")
-    
-    # getting array output file/ header set up
-    fname <- "formatted_LA.txt"
-    
-    write("v2.0", fname)
-    write(l2, fname, append=TRUE)
-    p= ""
-    for(x in numeric_values){
-      # print(x)
-      p <- paste(p, x, sep="\t")
-    }
-    p <- substring(p, 2)
-    write(p, fname, append=TRUE)
-    
-    for(i in 1:(ncol(design)+1)){
-      write(0, fname, append=TRUE)
-    }
-    
-    # appending the locating
-    file_conn <- file(fname, open = "a")
-    
-    # Loop through each row and write to the file
-    for (i in 1:nrow(design)) {
-      row_values <- design[i, ]
-      row_values <- paste(row_values, collapse = "\t")  # Concatenate values with tabs
-      cat(row_values, file = file_conn, "\n")
-    }
-    
-    # Close the file
-    close(file_conn)
+  # appending the locating
+  file_conn <- file(fname, open = "a")
+  
+  # Loop through each row and write to the file
+  for (i in 1:nrow(design)) {
+    row_values <- design[i, ]
+    row_values <- paste(row_values, collapse = "\t")  # Concatenate values with tabs
+    cat(row_values, file = file_conn, "\n")
   }
+  
+  # Close the file
+  close(file_conn)
 }
 
 augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.tsv", flag=0, aug_num=1, aug_fix=0.5, d=1, t=2, delta=1){
@@ -241,11 +240,46 @@ augment_design <- function(design_path=NULL, design_params=NULL, outfile="out.ts
   }
   
   else if(flag == 2){
-    format_file(LA, params)
-    add_row(design_path, "output.txt", rows_to_add, t)
+    format_file(design_path, design_params)
+    add_separation_row(rows_to_add=rows_to_add, t=t, append_path=design_path)
   }
   
 }
+
+# function(design_path=NULL, design_params=NULL, outfile="out.tsv", flag=0, aug_num=1, aug_fix=0.5, d=1, t=2, delta=1)
+# flag = 0 will augment by randomly selecting some # rows based on aug_num
+# flag = 1 will augment by adding D-Optimal rows based on aug_perecent
+# flag = 2 will add rows based on separation in LA design
+#                                                                                                               "2_2_2_3_params.tsv" 
+format_file("/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_separation.tsv")
+
+catch
+augment_design("/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_separation.tsv","/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_params.tsv",flag=2)
+
+
+
+catch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
