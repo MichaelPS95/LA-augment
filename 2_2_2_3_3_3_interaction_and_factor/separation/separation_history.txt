@@ -1,0 +1,145 @@
+Base design, 0 rows added, 12 rows total
+
+1	0	1	2	1	0	
+0	1	0	2	2	1	
+0	0	1	1	0	2	
+1	1	0	0	0	1	
+1	1	0	1	1	2	
+0	1	1	0	2	0	
+0	0	1	0	1	1	
+1	0	0	1	2	0	
+1	1	1	2	0	0	
+0	0	1	2	2	2	
+1	0	1	0	1	2	
+1	1	0	1	2	1	
+
+Balance = 0.625, Separation of 2 = 0.6129, D-Optimal Criteria = 0.40072
+
+
+1 row added, 13 rows total
+
+1	0	1	2	1	0	
+0	1	0	2	2	1	
+0	0	1	1	0	2	
+1	1	0	0	0	1	
+1	1	0	1	1	2	
+0	1	1	0	2	0	
+0	0	1	0	1	1	
+1	0	0	1	2	0	
+1	1	1	2	0	0	
+0	0	1	2	2	2	
+1	0	1	0	1	2	
+1	1	0	1	2	1	
+0	0	1	0	0	0	
+
+Balance = 0.76923, Separation of 2 = 0.67742, D-Optimal Criteria = 0.41253
+
+
+2 rows added, 14 rows total
+
+1	0	1	2	1	0	
+0	1	0	2	2	1	
+0	0	1	1	0	2	
+1	1	0	0	0	1	
+1	1	0	1	1	2	
+0	1	1	0	2	0	
+0	0	1	0	1	1	
+1	0	0	1	2	0	
+1	1	1	2	0	0	
+0	0	1	2	2	2	
+1	0	1	0	1	2	
+1	1	0	1	2	1	
+0	0	1	0	0	0	
+1	1	0	1	1	1
+
+Balance = 0.71429, Separation of 2 = 0.73118, D-Optimal Criteria = 0.39516
+
+
+3 rows added, 15 rows total
+
+1	0	1	2	1	0	
+0	1	0	2	2	1	
+0	0	1	1	0	2	
+1	1	0	0	0	1	
+1	1	0	1	1	2	
+0	1	1	0	2	0	
+0	0	1	0	1	1	
+1	0	0	1	2	0	
+1	1	1	2	0	0	
+0	0	1	2	2	2	
+1	0	1	0	1	2	
+1	1	0	1	2	1	
+0	0	1	0	0	0	
+1	1	0	1	1	1	
+1	1	0	1	1	2
+
+Balance = 0.66667, Separation of 2 = 0.75269, D-Optimal Criteria = 0.3842
+
+
+4 rows added, 16 rows total
+
+1	0	1	2	1	0	
+0	1	0	2	2	1	
+0	0	1	1	0	2	
+1	1	0	0	0	1	
+1	1	0	1	1	2	
+0	1	1	0	2	0	
+0	0	1	0	1	1	
+1	0	0	1	2	0	
+1	1	1	2	0	0	
+0	0	1	2	2	2	
+1	0	1	0	1	2	
+1	1	0	1	2	1	
+0	0	1	0	0	0	
+1	1	0	1	1	1	
+1	1	0	1	1	2	
+1	1	0	2	0	0	
+
+Balance = 0.78125, Separation of 2 = 0.7957, D-Optimal Criteria = 0.38895
+
+
+
+
+
+
+
+Balance = 0.73529, Separation of 2 = 0.86022, D-Optimal Criteria = 0.40678
+Balance = 0.69444, Separation of 2 = 0.90323, D-Optimal Criteria = 0.40577
+Balance = 0.65789, Separation of 2 = 0.92473, D-Optimal Criteria = 0.41127
+Balance = 0.625, Separation of 2 = 0.95699, D-Optimal Criteria = 0.4094
+Balance = 0.71429, Separation of 2 = 0.97849, D-Optimal Criteria = 0.41124
+Balance = 0.79545, Separation of 2 = 0.98925, D-Optimal Criteria = 0.41285
+Balance = 0.76087, Separation of 2 = 1, D-Optimal Criteria = 0.41629
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+Base design, 0 rows added, 8 rows total
+
+1	0	0	0	
+0	1	0	1	
+0	0	1	0	
+1	1	1	1	
+1	0	1	1	
+1	1	1	1	
+0	0	1	0	
+0	1	1	0	
+
+Balance = 0.5, Separation of 2 = 0.58333, D-Optimal Criteria = 0.27112
+
+
+1 row added, 9 rows total
+
+1	0	0	0	
+0	1	0	1	
+0	0	1	0	
+1	1	1	1	
+1	0	1	1	
+1	1	1	1	
+0	0	1	0	
+0	1	1	0	
+0	0	1	1		
+
+Balance = 0.44444, Separation of 2 = 0.66667, D-Optimal Criteria = 0.28751
+
+
+2 rows added, 10 rows total
+
+1	0	0	0	
+0	1	0	1	
+0	0	1	0	
+1	1	1	1	
+1	0	1	1	
+1	1	1	1	
+0	0	1	0	
+0	1	1	0	
+0	0	1	1	
+0	1	0	1		
+
+Balance = 0.6, Separation of 2 = 0.79167, D-Optimal Criteria = 0.29409
+
+
+3 rows added, 11 rows total
+
+1	0	0	0	
+0	1	0	1	
+0	0	1	0	
+1	1	1	1	
+1	0	1	1	
+1	1	1	1	
+0	0	1	0	
+0	1	1	0	
+0	0	1	1	
+0	1	0	1	
+1	0	1	1		
+
+Balance = 0.54545, Separation of 2 = 0.79167, D-Optimal Criteria = 0.28888
+
+
+4 rows added, 12 rows total
+
+1	0	0	0	
+0	1	0	1	
+0	0	1	0	
+1	1	1	1	
+1	0	1	1	
+1	1	1	1	
+0	0	1	0	
+0	1	1	0	
+0	0	1	1	
+0	1	0	1	
+1	0	1	1	
+1	0	1	0	
+
+Balance = 0.5, Separation of 2 = 0.83333, D-Optimal Criteria = 0.2867
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
