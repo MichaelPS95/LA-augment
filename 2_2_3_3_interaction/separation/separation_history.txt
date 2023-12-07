@@ -1,0 +1,221 @@
+Base design, 0 rows added, 9 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2
+
+Balance = 0.83333, Separation of 2 = 0.40541, D-Optimal Criteria = 0.46588
+
+
+1 row added, 10 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+
+Balance = 0.75, Separation of 2 = 0.51351, D-Optimal Criteria = 0.45803
+
+
+2 rows added, 11 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0
+
+Balance = 0.68182, Separation of 2 = 0.59459, D-Optimal Criteria = 0.46411
+
+
+3 rows added, 12 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2		
+
+Balance = 0.83333, Separation of 2 = 0.64865, D-Optimal Criteria = 0.45371
+
+
+4 rows added, 13 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2
+
+Balance = 0.76923, Separation of 2 = 0.72973, D-Optimal Criteria = 0.45856
+
+
+5 rows added, 14 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2	
+1	0	1	0
+
+Balance = 0.71429, Separation of 2 = 0.81081, D-Optimal Criteria = 0.45402
+
+
+6 rows added, 15 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2	
+1	0	1	0	
+1	0	0	2
+
+Balance = 0.66667, Separation of 2 = 0.89189, D-Optimal Criteria = 0.4674
+
+
+7 rows added, 16 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2	
+1	0	1	0	
+1	0	0	2	
+1	0	1	1	
+
+Balance = 0.78125, Separation of 2 = 0.91892, D-Optimal Criteria = 0.45199
+
+
+8 rows added, 17 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2	
+1	0	1	0	
+1	0	0	2	
+1	0	1	1	
+1	1	2	0	
+
+Balance = 0.73529, Separation of 2 = 0.94595, D-Optimal Criteria = 0.46115
+
+
+9 rows added, 18 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+1	0	2	1	
+1	1	0	0	
+0	1	1	2	
+0	0	2	2	
+1	0	1	0	
+1	0	0	2	
+1	0	1	1	
+1	1	2	0	
+0	0	0	1
+
+Balance = 0.83333, Separation of 2 = 1, D-Optimal Criteria = 0.47043
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,345 @@
+Base design, 0 rows added, 9 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2
+
+Balance = 0.83333, Separation of 2 = 0.40541, D-Optimal Criteria = 0.46588
+
+
+1 row added, 10 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+
+Balance = 0.75, Separation of 2 = 0.45946, D-Optimal Criteria = 0.44777
+
+
+2 rows added, 11 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2
+
+Balance = 0.68182, Separation of 2 = 0.56757, D-Optimal Criteria = 0.45953
+
+
+3 rows added, 12 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0
+
+Balance = 0.625, Separation of 2 = 0.64865, D-Optimal Criteria = 0.47674
+
+
+4 rows added, 13 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+
+Balance = 0.57692, Separation of 2 = 0.67568, D-Optimal Criteria = 0.48264
+
+
+5 rows added, 14 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+
+Balance = 0.53571, Separation of 2 = 0.75676, D-Optimal Criteria = 0.48735
+
+
+6 rows added, 15 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+
+Balance = 0.5, Separation of 2 = 0.78378, D-Optimal Criteria = 0.47982
+
+
+7 rows added, 16 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+
+Balance = 0.46875, Separation of 2 = 0.81081, D-Optimal Criteria = 0.48684
+
+
+8 rows added, 17 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+
+Balance = 0.58824, Separation of 2 = 0.86486, D-Optimal Criteria = 0.4793
+
+
+9 rows added, 18 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+
+Balance = 0.55556, Separation of 2 = 0.89189, D-Optimal Criteria = 0.47939
+
+
+10 rows added, 19 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+0	1	2	0		
+
+Balance = 0.52632, Separation of 2 = 0.89189, D-Optimal Criteria = 0.47944
+
+
+11 rows added, 20 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+0	1	2	0	
+1	0	0	2	
+
+Balance = 0.5, Separation of 2 = 0.91892, D-Optimal Criteria = 0.48677
+
+
+12 rows added, 21 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+0	1	2	0	
+1	0	0	2	
+0	0	1	2		
+
+Balance = 0.59524, Separation of 2 = 0.94595, D-Optimal Criteria = 0.48002
+
+
+13 rows added, 22 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+0	1	2	0	
+1	0	0	2	
+0	0	1	2	
+1	0	2	1	
+
+Balance = 0.56818, Separation of 2 = 0.94595, D-Optimal Criteria = 0.47854
+
+
+14 rows added, 23 rows total
+
+1	1	2	1	
+1	0	1	2	
+0	1	0	0	
+0	0	2	0	
+0	1	1	1	
+1	0	0	1	
+0	1	0	2	
+1	1	1	0	
+0	1	2	2	
+0	1	2	1	
+0	0	2	2	
+0	0	0	0	
+0	0	0	2	
+1	1	2	0	
+0	1	0	1	
+1	0	2	2	
+0	1	1	2	
+0	0	2	1	
+0	1	2	0	
+1	0	0	2	
+0	0	1	2	
+1	0	2	1	
+1	0	0	0	
+
+Balance = 0.54348, Separation of 2 = 0.94595, D-Optimal Criteria = 0.48842
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
