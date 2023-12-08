@@ -1,0 +1,7 @@
+library('inline')
+library('Rcpp')
+library(LATools)
+locatingArray_path = "/home/michael/Desktop/Designs/2_2_2_2_interaction/random/2_formatted.tsv"
+factorData_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/FD.tsv"
+response_path = "/home/michael/Desktop/Designs/2_2_2_2_interaction/random/2_response"
+buildModels(locatingArray_path, factorData_path, response_path, response_column = "output", logit = TRUE)

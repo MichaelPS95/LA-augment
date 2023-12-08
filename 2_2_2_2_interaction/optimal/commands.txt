@@ -1,0 +1,7 @@
+library('inline')
+library('Rcpp')
+library(LATools)
+locatingArray_path = "/home/michael/Desktop/Designs/2_2_2_2_interaction/optimal/0_formatted.tsv"
+factorData_path = "/home/michael/Desktop/Designs/2_2_2_2_interaction/optimal/FD.tsv"
+response_path = "/home/michael/Desktop/Designs/2_2_2_2_interaction/optimal/0_response"
+buildModels(locatingArray_path, factorData_path, response_path, response_column = "output", logit = TRUE)
