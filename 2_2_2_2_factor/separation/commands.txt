@@ -1,7 +1,7 @@
 library('inline')
 library('Rcpp')
 library(LATools)
-locatingArray_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/1_formatted.tsv"
+locatingArray_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/3_formatted.tsv"
 factorData_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/FD.tsv"
-response_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/1_response"
-buildModels(locatingArray_path, factorData_path, response_path, response_column = "output", logit = TRUE)
+response_path = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/3_response"
+buildModels(locatingArray_path, factorData_path, response_path, response_column = "output", max_terms=13,  models_n=20, logit = FALSE)
