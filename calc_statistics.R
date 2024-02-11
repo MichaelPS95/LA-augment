@@ -22,24 +22,37 @@ format_file <- function(LA=NULL, design_params=NULL){
   # to fix the format)
   if(is.null(design_params)){
     command <- paste("./check -sv <", LA, "> formatted_LA.txt",sep=" ")
-    print(command)
+    # print(command)
     system(command, intern=TRUE)
   }
   
   else{
     #suppressing warning here because the file is not "proper" table
-    suppressWarnings({params <- read.table(file=design_params, sep="\t",header=FALSE)})
+    suppressWarnings({params <- read.delim(file=design_params, header=FALSE)})
+
+    # print("Values list:")
+
+    # print(params)
     # read in the factor levels and convert to a vector of numbers to generate full factorial
     num_params <- as.numeric(params$V1[1])
-    row2_string <- as.character(params[2, 1])
+    row2_string <- as.character(params[2, ])
     values_list <- unlist(strsplit(row2_string, "\\s+"))
-    
+
+    # print("Values list:")
+
+    # print(values_list)
     # read in number of factors
     numeric_values <- as.numeric(values_list)
+
+    # print("Numeric Values:")
+
+    # print(numeric_values)
     
     # read in the LA
     design = read.table(file=LA, sep="\t",header=FALSE)
-    design <- design[, -ncol(design)]
+    if(ncol(design) != num_params){
+      design <- design[, -ncol(design)]
+    }
     
     # change column/row names to match gen.factorial() method name scheme
     new_column_names <- paste("X", 1:ncol(design), sep="")
@@ -93,6 +106,7 @@ calc_separation <- function(LA=NULL, params=NULL, t=2){
   sep <- 0
   
   if(!is.null(params)){
+    # print("We're in the if, LA is not formatted.")
     format_file(LA, params)
     command <- paste("./check -sv 1", t,  "< formatted_LA.txt > check_output.txt", sep=" ")
     # print(command)
@@ -100,10 +114,11 @@ calc_separation <- function(LA=NULL, params=NULL, t=2){
     command <- "python3 calc_separation.py check_output.txt"
     # print(command)
     sep <- system2("python3", c("calc_separation.py", "check_output.txt"), stdout=TRUE)
-    remove_file("formatted_LA.txt")
-    remove_file("check_output.txt")
+    # remove_file("formatted_LA.txt")
+    # remove_file("check_output.txt")
   }
   else{
+    # print("LA is formatted, we're in the else.")
     command <- paste("./check -sv 1", t,  "<", LA, "> check_output.txt", sep=" ")
     # print(command)
     system(command, intern=TRUE)
@@ -126,20 +141,26 @@ calc_balance <-function(LA=NULL, params=NULL){
   }
   
   #suppressing warning here because the file is not "proper" table
-  suppressWarnings({params <- read.table(file=params, sep="\t",header=FALSE)})
+  suppressWarnings({params <- read.delim(file=params, header=FALSE)})
   # read in the factor levels and convert to a vector of numbers to generate full factorial
   num_params <- as.numeric(params$V1[1])
-  row2_string <- as.character(params[2, 1])
+  row2_string <- as.character(params[2, ])
   values_list <- unlist(strsplit(row2_string, "\\s+"))
   
   # read in number of factors
   numeric_values <- as.numeric(values_list)
+  # print("Numeric Values:")
+  # print(numeric_values)
   param_vals <- data.frame(params_values = numeric_values)
   
+  # print("Param_vals")
+  # print(param_vals)
   # read in the LA
-  design = read.table(file=LA, sep="\t",header=FALSE)
+  design = read.delim(file=LA, header=FALSE)
   design <- design[, -ncol(design)]
   
+  # print("Design")
+  # print(design)
   # change column/row names to match gen.factorial() method name scheme
   new_column_names <- paste("X", 1:ncol(design), sep="")
   colnames(design) <- new_column_names
@@ -150,16 +171,21 @@ calc_balance <-function(LA=NULL, params=NULL){
   for(i in values_list){
     size <- round(as.numeric(i))
     row <- rep(0, size)
+    # print(paste("Row",i,"=",sep=" "))
+    # print(row)
+    # print(c(balance_count, list(row)))
     balance_count <- c(balance_count, list(row))
   }
-  
+  # print("Balance count")
+  # print(balance_count)
   # get occurrence counts for parameter values
   for(i in 1:nrow(design)){
     for(j in 1:ncol(design)){
       balance_count[[j]][design[i, j] + 1] <- balance_count[[j]][design[i, j] + 1] + 1
     }
   }
-  
+  # print("Balance count")
+  # print(balance_count)
   # calculate the balance
   total <- 0.0
   count = 0
@@ -186,9 +212,8 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   library(dplyr)
   
   # read in design that's given
-  design = read.table(file=LA, sep="\t",header=FALSE)
+  design = read.delim(file=LA, header=FALSE)
   design <- design[, -ncol(design)]
-  
   # change column/row names to match gen.factorial() method name scheme
   new_column_names <- paste("X", 1:ncol(design), sep="")
   colnames(design) <- new_column_names
@@ -201,17 +226,32 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   }
   # print(design)
   
-  #suppressing warning here because the file is not "proper" table
-  suppressWarnings({params <- read.table(file=design_params, sep="\t",header=FALSE)})
+  # #suppressing warning here because the file is not "proper" table
+  # suppressWarnings({params <- read.delim(file=design_params, header=FALSE)})
+  # 
+  # # read in the factor levels and convert to a vector of numbers to generate full factorial
+  # num_params <- as.numeric(params$V1[1])               
+  # row2_string <- as.character(params[2, 1]) 
+  # values_list <- unlist(strsplit(row2_string, "\\s+"))
+  # 
+  # # read in number of factors
+  # numeric_values <- as.numeric(values_list)
+  lines <- readLines(con = design_params, warn = FALSE)
+  # If the last line is incomplete, remove it
+  if (nchar(lines[length(lines)]) == 0) {
+    lines <- lines[-length(lines)]
+  }
+  # Split lines using regular expression to handle both spaces and tabs as separators
+  params <- lapply(lines, function(line) unlist(strsplit(line, "[\t ]+")))
   
-  # read in the factor levels and convert to a vector of numbers to generate full factorial
-  num_params <- as.numeric(params$V1[1])               
-  row2_string <- as.character(params[2, 1]) 
-  values_list <- unlist(strsplit(row2_string, "\\s+"))
+  # Convert to a data frame
+  params <- as.data.frame(do.call(rbind, params), stringsAsFactors = FALSE)
+  # print(params)
+  second_row <- params[2, ]
   
-  # read in number of factors
-  numeric_values <- as.numeric(values_list)
-  
+  # Convert the values to numeric
+  numeric_values <- as.numeric(second_row)
+  # print(numeric_values)
   # generate factorial design
   factorial <- gen.factorial(levels=numeric_values, nVars=num_params[1], center=FALSE)
   
@@ -224,16 +264,19 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   
   # augment using D criteria
   opt <- optFederov(data = design, nTrials=design_rows, augment=TRUE, criterion = "D", rows=1:design_rows)
-  # print(opt)
+  # opt1 <- optFederov(data = factorial, nTrials=design_rows, augment=TRUE, criterion = "D", rows=1:design_rows)
+  opt1 <- optFederov(data = factorial, criterion = "D")
+  # print(opt1)
   
-  des <- round(opt$D, digits=5)
+  des <- round(opt$D/opt1$D, digits=5)
   # print(des)
   
   stats <- paste("Balance = ", bal, ", Separation of ", t, " = ", separ, ", D-Optimal Criteria = ", des, sep="")
   print(stats)
 }
 
-calc_statistics("/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_separation.tsv","/home/michael/Desktop/Designs/2_2_3_3/2_2_3_3_params.tsv")
 
-
+calc_statistics("/home/michael/Desktop/Designs/2_2_3_3_two_interactions/optimal/2_2_3_3_optimal.tsv","/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv")
+calc_statistics("/home/michael/Desktop/correct_designs/2222/linear/separated/2222.tsv","/home/michael/Desktop/separation_row/params.tsv")
+#  "/home/michael/Desktop/Designs/2_2_3_3_two_interactions/optimal/2_2_3_3_optimal.tsv","/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv"
 
