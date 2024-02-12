@@ -21,6 +21,4 @@ def add_noise(responses):
                 f.write(str(resp[i]) + "\n")
 
 
-for i in range(3):
-    st = "/home/michael/Desktop/Designs/2_2_2_2_interaction/optimal/" +str(i) + "_response.tsv"
-    add_noise(st)
+add_noise("/home/michael/Desktop/correct_designs/2233/piecewise/separated/responses.tsv")

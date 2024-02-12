@@ -1,8 +1,9 @@
 import sys
 import re
+import os
 
 
-def format(LA, params, output):
+def format(LA, params, base_len=0, num_added=0):
     design = []
     with open(LA,"r") as f:
         for line in f:
@@ -18,24 +19,22 @@ def format(LA, params, output):
             param_list.append(int(num))
         # print(num_params)
         # print(param_list)
-
-    with open(output, "w") as f:
-        f.write("v2.0\n")
-        f.write(str(len(design)) + "\t" + str(num_params) + "\n")
-        for num in param_list:
-            f.write(str(num) + "\t")
-        f.write("\n")
-        for i in range(num_params+1):
-            f.write("0\n")
-        for row in design:
-            for num in row:
-                f.write(num + "\t")
+    
+    for i in range(num_added+1):
+        directory, file = os.path.split(LA)
+        path = directory + '/' + str(i) + '_' + file
+        # print(path)
+        with open(path, "w") as f:
+            f.write("v2.0\n")
+            f.write(str(base_len+i) + "\t" + str(num_params) + "\n")
+            for num in param_list:
+                f.write(str(num) + "\t")
             f.write("\n")
+            for j in range(num_params+1):
+                f.write("0\n")
+            for j in range(base_len+i):
+                for num in design[j]:
+                    f.write(num + "\t")
+                f.write("\n")
 
-
-for i in range(4):
-    s1 = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/" + str(i) + "_separation.tsv"
-    s2 = "/home/michael/Desktop/Designs/2_2_2_2_factor/separation/" + str(i) + "_formatted.tsv"
-    # print(s1)
-    # print(s2)
-    format(s1 , f"/home/michael/Desktop/Designs/2_2_2_2_factor/2_2_2_2_params.tsv", s2)
+format("/home/michael/Desktop/correct_designs/2233/piecewise/separated/2233.tsv", "/home/michael/Desktop/correct_designs/2233/params.tsv",9,13)

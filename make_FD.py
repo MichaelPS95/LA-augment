@@ -37,6 +37,6 @@ def make_data_file(LA, params, output):
 
 
 for i in range(1):
-    s1 = "/home/michael/Desktop/Designs/2_2_2_2_factor/optimal/0_optimal.tsv"
-    s2 = "/home/michael/Desktop/Designs/2_2_2_2_factor/optimal/FD.tsv"
-    make_data_file(s1 , f"/home/michael/Desktop/Designs/2_2_2_2_factor/2_2_2_2_params.tsv", s2)
+    s1 = "/home/michael/Desktop/Designs/2_2_3_3_two_interactions/separation/unformatted_designs/0_separation.tsv"
+    s2 = "/home/michael/Desktop/Designs/2_2_3_3_two_interactions/separation/FD.tsv"
+    make_data_file(s1 , f"/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv", s2)
