@@ -42,18 +42,51 @@ format_file <- function(LA=NULL, design_params=NULL){
 
     # print(values_list)
     # read in number of factors
-    numeric_values <- as.numeric(values_list)
+    # format_file <- function(LA=NULL, design_params=NULL){
+  
+  # the locating array has to be provide in order to check it
+  if(is.null(LA)){
+    stop("The design file must be provided.")
+  }
+  
+  # I am assuming that if you don't pass parameters to generate a design that it's
+  # already in the proper format to be checked (since I will need these parameters
+  # to fix the format)
+  if(is.null(design_params)){
+    command <- paste("./check -sv <", LA, "> formatted_LA.txt",sep=" ")
+    # print(command)
+    system(command, intern=TRUE)
+  }
+  
+  else{
+    #suppressing warning here because the file is not "proper" table
+    suppressWarnings({params <- read.delim(file=design_params, header=FALSE)})
+
+    # print("Values list:")
+
+    # print(params)
+    # read in the factor levels and convert to a vector of numbers to generate full factorial
+    suppressWarnings({num_params <- as.numeric(params$V1[1])})
+    suppressWarnings({row2_string <- as.character(params[2, ])})
+    suppressWarnings({values_list <- unlist(strsplit(row2_string, "\\s+"))})
+
+    # print("Values list:")
+
+    # print(values_list)
+    # read in number of factors
+    suppressWarnings({numeric_values <- as.numeric(values_list)})
 
     # print("Numeric Values:")
 
     # print(numeric_values)
     
     # read in the LA
-    design = read.table(file=LA, sep="\t",header=FALSE)
+    suppressWarnings({design = read.table(file=LA, sep="\t",header=FALSE)})
+    # print(design)
     if(ncol(design) != num_params){
       design <- design[, -ncol(design)]
     }
-    
+    print(design)
     # change column/row names to match gen.factorial() method name scheme
     new_column_names <- paste("X", 1:ncol(design), sep="")
     colnames(design) <- new_column_names
@@ -89,6 +122,7 @@ format_file <- function(LA=NULL, design_params=NULL){
     
     # Close the file
     close(file_conn)
+   }
   }
 }
 
@@ -142,13 +176,22 @@ calc_balance <-function(LA=NULL, params=NULL){
   
   #suppressing warning here because the file is not "proper" table
   suppressWarnings({params <- read.delim(file=params, header=FALSE)})
-  # read in the factor levels and convert to a vector of numbers to generate full factorial
+  
+  # Read in the factor levels and convert to a vector of numbers to generate full factorial
   num_params <- as.numeric(params$V1[1])
   row2_string <- as.character(params[2, ])
-  values_list <- unlist(strsplit(row2_string, "\\s+"))
+  suppressWarnings({values_list <- unlist(strsplit(row2_string, "\\s+"))})
   
-  # read in number of factors
-  numeric_values <- as.numeric(values_list)
+  # Read in number of factors
+  suppressWarnings({numeric_values <- as.numeric(values_list)})
+  # print(any(is.na(numeric_values[length(numeric_values)])))
+  
+  if (any(is.na(numeric_values[length(numeric_values)]))) {
+    # print("Trying to omit NA values")
+    numeric_values <- numeric_values[-length(numeric_values)]
+  }
+  
+  # Now 'numeric_values' contains all elements except the last one
   # print("Numeric Values:")
   # print(numeric_values)
   param_vals <- data.frame(params_values = numeric_values)
@@ -156,10 +199,18 @@ calc_balance <-function(LA=NULL, params=NULL){
   # print("Param_vals")
   # print(param_vals)
   # read in the LA
+  # print(any(is.na(param_vals[ncol(param_vals)])))
+  if(any(is.na(param_vals[ncol(param_vals)]))){
+    param_vals <- param_vals[complete.cases(param_vals), ]
+  }
+  # print("Param_vals")
+  # print(param_vals)
   design = read.delim(file=LA, header=FALSE)
+  # print("------------------DEBUGGING---------------------")
+  # print(design)
   design <- design[, -ncol(design)]
   
-  # print("Design")
+  # print("------------------DEBUGGING---------------------")
   # print(design)
   # change column/row names to match gen.factorial() method name scheme
   new_column_names <- paste("X", 1:ncol(design), sep="")
@@ -168,8 +219,10 @@ calc_balance <-function(LA=NULL, params=NULL){
   # set up list to get counts for parameter values
   balance_count <- list()
   
-  for(i in values_list){
+  for(i in numeric_values){
     size <- round(as.numeric(i))
+    print("size")
+    print(size)
     row <- rep(0, size)
     # print(paste("Row",i,"=",sep=" "))
     # print(row)
@@ -224,6 +277,7 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
       design[i,j] <- design[i,j] + 1
     }
   }
+  # print("---")
   # print(design)
   
   # #suppressing warning here because the file is not "proper" table
@@ -248,10 +302,12 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   params <- as.data.frame(do.call(rbind, params), stringsAsFactors = FALSE)
   # print(params)
   second_row <- params[2, ]
-  
+  print("SECOND ROW")
+  print(second_row)
   # Convert the values to numeric
   numeric_values <- as.numeric(second_row)
-  # print(numeric_values)
+  print("NUMERIC VALUES")
+  print(numeric_values)
   # generate factorial design
   factorial <- gen.factorial(levels=numeric_values, nVars=num_params[1], center=FALSE)
   
@@ -265,18 +321,12 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   # augment using D criteria
   opt <- optFederov(data = design, nTrials=design_rows, augment=TRUE, criterion = "D", rows=1:design_rows)
   # opt1 <- optFederov(data = factorial, nTrials=design_rows, augment=TRUE, criterion = "D", rows=1:design_rows)
-  opt1 <- optFederov(data = factorial, criterion = "D")
+  # opt1 <- optFederov(data = factorial, criterion = "D")
   # print(opt1)
   
-  des <- round(opt$D/opt1$D, digits=5)
+  des <- round(opt$D, digits=5)
   # print(des)
   
   stats <- paste("Balance = ", bal, ", Separation of ", t, " = ", separ, ", D-Optimal Criteria = ", des, sep="")
   print(stats)
 }
-
-
-calc_statistics("/home/michael/Desktop/Designs/2_2_3_3_two_interactions/optimal/2_2_3_3_optimal.tsv","/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv")
-calc_statistics("/home/michael/Desktop/correct_designs/2222/linear/separated/2222.tsv","/home/michael/Desktop/separation_row/params.tsv")
-#  "/home/michael/Desktop/Designs/2_2_3_3_two_interactions/optimal/2_2_3_3_optimal.tsv","/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv"
-
