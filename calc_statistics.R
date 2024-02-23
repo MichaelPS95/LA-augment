@@ -138,8 +138,19 @@ calc_separation <- function(LA=NULL, params=NULL, t=2){
   # to fix the format)
   
   sep <- 0
-  
-  if(!is.null(params)){
+  lines <- readLines(LA)
+  # print(lines)
+  # print(grepl("^v2.0", lines[1]))
+  # Check if the first line contains "v2.0"
+  if (grepl("^v2.0", lines[1])) {
+    # print("LA is formatted, we're in the else.")
+    command <- paste("./check -sv 1", t,  "<", LA, "> check_output.txt", sep=" ")
+    # print(command)
+    system(command, intern=TRUE)
+    sep <- system2("python3", c("calc_separation.py", "check_output.txt"), stdout=TRUE)
+    remove_file("check_output.txt")
+  }
+  else{
     # print("We're in the if, LA is not formatted.")
     format_file(LA, params)
     command <- paste("./check -sv 1", t,  "< formatted_LA.txt > check_output.txt", sep=" ")
@@ -151,14 +162,14 @@ calc_separation <- function(LA=NULL, params=NULL, t=2){
     # remove_file("formatted_LA.txt")
     # remove_file("check_output.txt")
   }
-  else{
-    # print("LA is formatted, we're in the else.")
-    command <- paste("./check -sv 1", t,  "<", LA, "> check_output.txt", sep=" ")
-    # print(command)
-    system(command, intern=TRUE)
-    sep <- system2("python3", c("calc_separation.py", "check_output.txt"), stdout=TRUE)
-    remove_file("check_output.txt")
-  }
+  # else{
+  #   # print("LA is formatted, we're in the else.")
+  #   command <- paste("./check -sv 1", t,  "<", LA, "> check_output.txt", sep=" ")
+  #   # print(command)
+  #   system(command, intern=TRUE)
+  #   sep <- system2("python3", c("calc_separation.py", "check_output.txt"), stdout=TRUE)
+  #   remove_file("check_output.txt")
+  # }
   return(sep)
 }
 
@@ -172,6 +183,29 @@ calc_balance <-function(LA=NULL, params=NULL){
   # has access to parameters if they have the array to avoid computing this
   if(is.null(params)){
     stop("There are no parameters specified")
+  }
+  
+  lines <- readLines(LA)
+  # print(lines)
+  # print(grepl("^v2.0", lines[1]))
+  # Check if the first line contains "v2.0"
+  if (grepl("^v2.0", lines[1])) {
+    # If "v2.0" is found, get the number of rows and columns from the next line
+    dimensions <- as.integer(unlist(strsplit(lines[2], "\t")))
+    # print(dimensions)
+    nrows <- dimensions[1]
+    ncols <- dimensions[2]
+    # print(nrows)
+    # print(ncols)
+    # Skip the header lines and read the matrix into a data frame
+    matrix_start <- ncols+1+4
+  } else {
+    # If "v2.0" is not found, assume the matrix starts from the first line
+    nrows <- length(lines)
+    ncols <- length(unlist(strsplit(lines[1], "\t")))
+    
+    # Read the matrix directly into a data frame
+    matrix_start <- 1
   }
   
   #suppressing warning here because the file is not "proper" table
@@ -205,10 +239,8 @@ calc_balance <-function(LA=NULL, params=NULL){
   }
   # print("Param_vals")
   # print(param_vals)
-  design = read.delim(file=LA, header=FALSE)
-  # print("------------------DEBUGGING---------------------")
-  # print(design)
-  design <- design[, -ncol(design)]
+  matrix_lines <- lines[matrix_start:(matrix_start + nrows - 1)]
+  design <- as.data.frame(do.call(rbind, lapply(matrix_lines, function(x) as.numeric(strsplit(x, "\t")[[1]]))))
   
   # print("------------------DEBUGGING---------------------")
   # print(design)
@@ -221,8 +253,8 @@ calc_balance <-function(LA=NULL, params=NULL){
   
   for(i in numeric_values){
     size <- round(as.numeric(i))
-    print("size")
-    print(size)
+    # print("size")
+    # print(size)
     row <- rep(0, size)
     # print(paste("Row",i,"=",sep=" "))
     # print(row)
@@ -252,7 +284,10 @@ calc_balance <-function(LA=NULL, params=NULL){
       }
     }
   }
-  
+  # print(balance_count)
+  # print(total)
+  # print(count)
+  # print(min)
   avg <- total/count
   bal <- round(min/avg, digits=5)
   return(bal)
@@ -267,10 +302,24 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   # read in design that's given
   design = read.delim(file=LA, header=FALSE)
   design <- design[, -ncol(design)]
+  print(design)
+  index <- 0
+  for (i in 1:nrow(design)){
+    if(is.na(design[i, 2])){
+      index <- i
+    }
+  }
+  
+  # Select rows after the last NA-containing row
+  design = design[(index + 1):nrow(design), ]
+  # print(design)
   # change column/row names to match gen.factorial() method name scheme
   new_column_names <- paste("X", 1:ncol(design), sep="")
   colnames(design) <- new_column_names
-  
+  rownames(design) <- 1:nrow(design)
+  design <- as.data.frame(lapply(design, as.integer))
+  # print(design)
+  # print(class(design[1, 1]))
   # map all the LA values to factorial
   for(i in 1:nrow(design)){
     for(j in 1:ncol(design)){
@@ -302,12 +351,12 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   params <- as.data.frame(do.call(rbind, params), stringsAsFactors = FALSE)
   # print(params)
   second_row <- params[2, ]
-  print("SECOND ROW")
-  print(second_row)
+  # print("SECOND ROW")
+  # print(second_row)
   # Convert the values to numeric
   numeric_values <- as.numeric(second_row)
-  print("NUMERIC VALUES")
-  print(numeric_values)
+  # print("NUMERIC VALUES")
+  # print(numeric_values)
   # generate factorial design
   factorial <- gen.factorial(levels=numeric_values, nVars=num_params[1], center=FALSE)
   
@@ -330,3 +379,10 @@ calc_statistics <- function(LA=NULL, design_params=NULL, t=2){
   stats <- paste("Balance = ", bal, ", Separation of ", t, " = ", separ, ", D-Optimal Criteria = ", des, sep="")
   print(stats)
 }
+
+
+calc_statistics("/home/michael/Desktop/Designs/2_2_3_3_two_interactions/optimal/2_2_3_3_optimal.tsv","/home/michael/Desktop/Designs/2_2_3_3_two_interactions/2_2_3_3_params.tsv")
+calc_statistics("/home/michael/Desktop/correct_designs/2222/linear/separated/0_2222.tsv","/home/michael/Desktop/correct_designs/2222/params.tsv")
+calc_statistics("/home/michael/Desktop/correct_designs/2222/linear/optimal/2222.tsv","/home/michael/Desktop/correct_designs/2222/params.tsv")
+
+
