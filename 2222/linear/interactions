@@ -1,0 +1,3 @@
+base output = 1
+when f1 = 1, add 2
+when f0 = 0, and f3 = 0, add 4
